@@ -1,10 +1,11 @@
 export default class Enemy {
-    constructor(app,GAME_WIDTH, GAME_HEIGHT,animatedTexture, bulletTexture, character) {
+    constructor(app,GAME_WIDTH, GAME_HEIGHT,animatedTexture, bulletTexture, character, scene) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
         this.animatedTexture = animatedTexture;
         this.character = character;
+        this.scene = scene;
 
         this.position = {
             x: this.GAME_WIDTH - Math.floor((Math.random() * 10) + 1),
@@ -17,7 +18,7 @@ export default class Enemy {
         this.enemy.height = 80;
         this.enemy.animationSpeed = 0.150; 
         this.enemy.play();
-        app.stage.addChild(this.enemy);      
+        scene.addChild(this.enemy);      
 
         this.maxSpeed = this.randomSpeedVX();
 
@@ -26,7 +27,7 @@ export default class Enemy {
         this.bullet.width = 30;
         this.bullet.height = 15;
         this.bullet.position.set(this.enemy.position.x + 10, this.enemy.position.y + 10);
-        this.app.stage.addChild(this.bullet);
+        scene.addChild(this.bullet);
         this.bulletSpeed = 7;
 
         this.missedBombs = 0;

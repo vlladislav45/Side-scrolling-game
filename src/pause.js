@@ -1,8 +1,9 @@
 export default class Pause {
-    constructor(app, texture, GAME_WIDTH, GAME_HEIGHT) {
+    constructor(app, texture, GAME_WIDTH, GAME_HEIGHT, scene) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
+        this.scene = scene;
 
         this.addTexture(texture);
 
@@ -35,6 +36,6 @@ export default class Pause {
         this.btn.position.set(this.GAME_WIDTH / 20, this.GAME_HEIGHT / 8);
         this.btn.width = 50;
         this.btn.height = 50;
-        this.app.stage.addChild(this.btn);
+        this.scene.addChild(this.btn);
       }
 }

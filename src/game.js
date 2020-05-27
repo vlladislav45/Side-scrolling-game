@@ -7,24 +7,23 @@ import Enemy from "./enemy.js";
 import Pause from "./pause.js";
 
 //Create a Pixi Application
-let app = null;
+let app, gameOverScene, mainScene, scores = null;
+let restartBtn = null;
+const GAME_WIDTH = 1366;
+const GAME_HEIGHT = 768;
 function createGame() {
-  const GAME_WIDTH = 1366;
-  const GAME_HEIGHT = 768;
-
       app = new PIXI.Application({ 
         width: GAME_WIDTH, 
         height: GAME_HEIGHT        
       }
     );
     //Add the canvas that Pixi automatically created for you to the HTML document
-    document.body.appendChild(app.view);
-    // app.renderer.view.style.position = "absolute";
+    document.body.appendChild(app.view); //Canvas
+    app.renderer.view.style.position = "absolute";
     app.renderer.view.style.width = window.innerWidth + "px";
     app.renderer.view.style.height = window.innerHeight + "px";
-    // app.renderer.view.style.display = "block";
+    app.renderer.view.style.display = "block";
     app.renderer.view.style.border = "8px solid black";
-
 
   const obstacleFrames = [ 
     "../sprites/obstacles/coin-0.png",
@@ -81,112 +80,177 @@ function createGame() {
     .add(tank)
     .add("bullet", "../sprites/bullet/1.png")
     .add("pause", "../images/icons8-pause-100.png")
+    .add("restartBtn", "../images/restart-btn.png")
     .load(setup);
 
-    let gameOverScene,message, bgBack, bgMiddle, bgFront, bgClouds, bgMidClouds, bgSky, bgSkyTop, bgSun;
+    let message, bgBack, bgMiddle, bgFront, bgClouds, bgMidClouds, bgSky, bgSkyTop, bgSun;
     let bgX = 0;
     let bgSpeed = 2;
 
     //This `setup` function will run when the image has loaded
   function setup() {
+      mainScene = new PIXI.Container();
+      mainScene.visible = true;
+
+      app.stage.addChild(mainScene);
+
       //Create the `gameOver` scene
-      gameOverScene = new PIXI.Container;
-      app.stage.addChild(gameOverScene);
-    
-      //Make the `gameOver` scene invisible when the game first starts
+      gameOverScene = new PIXI.Container();
       gameOverScene.visible = false;
-    
-      //Create the text sprite and add it to the `gameOver` scene
-      let style = new PIXI.TextStyle({
+
+      app.stage.addChild(gameOverScene);
+
+      let blackRect = new PIXI.Graphics();
+      blackRect.beginFill(0xFFFFFF);
+      blackRect.drawRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+      gameOverScene.addChild(blackRect);
+      
+      message = new PIXI.Text("Game Over!");
+      message.anchor.set(0,5); //Center text
+      message.position.set((GAME_WIDTH / 2) - 100, (GAME_HEIGHT / 2) - 100);
+      message.style = new PIXI.TextStyle({
+        fill: 0x00000,
         fontFamily: "Arial",
         fontSize: 40,
-        fill: "white"
+        stroke: 0xFFFFFF,
+        strokeThickness: 3,
       });
-      message = new PIXI.Text("The End!", style);
-      message.position.set(GAME_WIDTH / 2, GAME_HEIGHT / 2);
       gameOverScene.addChild(message);
 
-    bgSun = createBg(app.loader.resources["bgSun"].texture, GAME_WIDTH, GAME_HEIGHT,GAME_WIDTH - 50, GAME_HEIGHT / 100);
-    bgSkyTop = createBg(app.loader.resources["bgSkyTop"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 100);
-    bgSky = createBg(app.loader.resources["bgSky"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 6.3);
-    bgClouds = createBg(app.loader.resources["bgClouds"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 10);
-    bgMidClouds = createBg(app.loader.resources["bgMidClouds"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 5);
-    bgBack = createBg(app.loader.resources["bgBack"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 400);
-    bgMiddle = createBg(app.loader.resources["bgMiddle"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 180);
-    bgFront = createBg(app.loader.resources["bgFront"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 100);
+      //Restart button for Game Scene
+      restartBtn = new PIXI.Sprite(app.loader.resources["restartBtn"].texture);
+      restartBtn.position.set(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+      restartBtn.anchor.set(0.5,0.5);
+      restartBtn.interactive = true;
 
-    //Create the character (plane) and other objects
-    let character = new Character(GAME_WIDTH,GAME_HEIGHT, app.loader.resources["character"].texture, app); 
-    new InputHandler(character);
-    let msg = new Message(app,GAME_WIDTH,GAME_HEIGHT, "Scores: 0", "Bombs: 0");
-    let scores = 0;
-    const localSound = "./sounds/airplanes.wav";
-    const sound = new Sound(app, localSound, GAME_WIDTH, GAME_HEIGHT, app.loader.resources["soundOn"].texture, app.loader.resources["soundOff"].texture);
-    const pause = new Pause(app, app.loader.resources["pause"].texture,GAME_WIDTH, GAME_HEIGHT);
+      const restartMsg = new PIXI.Text("Restart Game", {
+          font : '22px Arial',
+          fill : 0x000000,
+           align : 'center',
+          cacheAsBitmap: true, // for better performance
+      });
+      restartMsg.anchor.set(0.5,0.5);
+      restartBtn.addChild(restartMsg);
+      gameOverScene.addChild(restartBtn);
 
-    //Create obstacles
-      //let lengthOfObstacles = Math.floor(Math.random() * 10) + 1;
+      let restartScores = new PIXI.Text("Scores: ", {
+        fontFamily: "Arial",
+        fontSize: 36,
+        fill: "black",
+        stroke: '#ff3300',
+        strokeThickness: 4,
+        dropShadow: true,
+        dropShadowColor: "#000000",
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+      });
+      gameOverScene.addChild(restartScores);
+
+      let restartBombs = new PIXI.Text("Bombs: ", {
+        fontFamily: "Arial",
+        fontSize: 36,
+        fill: "black",
+        stroke: '#ff3300',
+        strokeThickness: 4,
+        dropShadow: true,
+        dropShadowColor: "#000000",
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+      });
+      restartBombs.y = GAME_HEIGHT / 20;
+      gameOverScene.addChild(restartBombs);
+
+      let timeForRestart = new PIXI.Text("After button is clicked, the game will be restarted to 3 seconds", {
+        font : '22px Arial',
+        fill : 0x000000,
+        cacheAsBitmap: true, // for better performance
+      });
+      timeForRestart.position.set(GAME_WIDTH / 2, GAME_HEIGHT - 200);
+      timeForRestart.anchor.set(0.5,0.5);
+      gameOverScene.addChild(timeForRestart);
+
+      bgSun = createBg(app.loader.resources["bgSun"].texture, GAME_WIDTH, GAME_HEIGHT,GAME_WIDTH - 50, GAME_HEIGHT / 100);
+      bgSkyTop = createBg(app.loader.resources["bgSkyTop"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 100);
+      bgSky = createBg(app.loader.resources["bgSky"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 6.3);
+      bgClouds = createBg(app.loader.resources["bgClouds"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 10);
+      bgMidClouds = createBg(app.loader.resources["bgMidClouds"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT / 5);
+      bgBack = createBg(app.loader.resources["bgBack"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 400);
+      bgMiddle = createBg(app.loader.resources["bgMiddle"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 180);
+      bgFront = createBg(app.loader.resources["bgFront"].texture, GAME_WIDTH, GAME_HEIGHT,0, GAME_HEIGHT - 100);
+
+      //Create the character (plane) and other objects
+      const character = new Character(app, GAME_WIDTH,GAME_HEIGHT, app.loader.resources["character"].texture, mainScene); 
+      new InputHandler(character);
+      let msg = new Message(app,GAME_WIDTH,GAME_HEIGHT, "Scores: 0", "Bombs: 0", mainScene);
+      scores = 0;
+      const localSound = "./sounds/airplanes.wav";
+      const sound = new Sound(app, localSound, GAME_WIDTH, GAME_HEIGHT, app.loader.resources["soundOn"].texture,
+      app.loader.resources["soundOff"].texture, mainScene);
+      const pause = new Pause(app, app.loader.resources["pause"].texture,GAME_WIDTH, GAME_HEIGHT, mainScene);
+
+      //Create obstacles
       const lengthOfObstacles = 10;
       let obstacles = [];
       for(let i = 0; i < lengthOfObstacles; i++) {
-          obstacles.push(new Obstacle(app, GAME_WIDTH, GAME_HEIGHT, obstacleFrames));
+          obstacles.push(new Obstacle(app, GAME_WIDTH, GAME_HEIGHT, obstacleFrames, mainScene));
       }
 
-    //Create Enemies (Tanks)
-    let enemies = [];
-    const lengthOfEnemies = 3;
-    for(let i = 0; i < lengthOfEnemies; i++) {
-      enemies.push(new Enemy(app, GAME_WIDTH, GAME_HEIGHT, tank, app.loader.resources["bullet"].texture, character));
-    }
+      //Create Enemies (Tanks)
+      let enemies = [];
+      const lengthOfEnemies = 3;
+      for(let i = 0; i < lengthOfEnemies; i++) {
+        enemies.push(new Enemy(app, GAME_WIDTH, GAME_HEIGHT, tank, app.loader.resources["bullet"].texture, character, mainScene));
+      }
 
-    app.ticker.add(function(delta) {
-      updateBg(); // Scroll sider background
+      app.ticker.add(function(delta) {
+        updateBg(); // Scroll sider background
 
-      character.update(); // Character update
-      character.draw(); // Character draw
+        character.update(); // Character update
+        character.draw(); // Character draw
 
-      sound.check(); // Sound mute/unmuted
-      pause.check(); // Pause canvas/resume canvas
-      
-      for(let i = 0; i < obstacles.length; i++) { // Obstacles
-          obstacles[i].update();
-          obstacles[i].draw();
+         sound.check(); // Sound mute/unmuted
+         pause.check(); // Pause canvas/resume canvas
+        
+        for(let i = 0; i < obstacles.length; i++) { // Obstacles
+            obstacles[i].update();
+            obstacles[i].draw();
 
-          if(character.score(obstacles[i])) {
-             scores++;
-             msg.updateScoreText("Scores: "+ scores);
-          }
-          
+            if(character.score(obstacles[i])) {
+              scores++;
+              msg.updateScoreText("Scores: "+ scores);
+              restartScores.text = "Scores: " + scores;  
+            }
+            
+            if(collision(character.character,obstacles[i].obstacleFrames)) {
+              character.crash(crashPlane);
 
-          if(collision(character.character,obstacles[i].obstacleFrames)) {
+              endGame();
+            }
+        }
+
+        for(let i = 0; i < enemies.length; i++) { // Tanks
+          enemies[i].update();
+          enemies[i].draw();        
+
+          msg.updateBombText("Bombs: " + enemies[i].missedBombs);
+          restartBombs.text = "Bombs: " + enemies[i].missedBombs;
+
+
+          if(collision(character.character,enemies[i].enemy) || collision(character.character,enemies[i].bullet)) {
             character.crash(crashPlane);
 
             endGame();
-            resetGame();
           }
-      }
-
-      for(let i = 0; i < enemies.length; i++) { // Tanks
-        enemies[i].update();
-        enemies[i].draw();        
-
-        msg.updateBombText("Bombs: " + enemies[i].missedBombs);
-
-        if(collision(character.character,enemies[i].enemy) || collision(character.character,enemies[i].bullet)) {
-          character.crash(crashPlane);
-
-          endGame();
-          resetGame();
-        }
-    }
-    
-    });
+      }    
+      });
   }
 
   function createBg(texture, game_width, game_height, x, y) {
     let tiling = new PIXI.TilingSprite(texture, game_width, game_height);
     tiling.position.set(x,y);
-    app.stage.addChild(tiling);
+    mainScene.addChild(tiling);
 
     return tiling;
   }
@@ -210,8 +274,8 @@ function createGame() {
     //Find the center points of each sprite
     character.centerX = character.x + character.width / 2; 
     character.centerY = character.y + character.height / 2; 
-    enemy.centerX = enemy.x + enemy.width / 2; 
-    enemy.centerY = enemy.y + enemy.height / 2; 
+    enemy.centerX = enemy.x + enemy.width / 2 - 10; 
+    enemy.centerY = enemy.y + enemy.height / 2 - 10; 
 
     //Find the half-widths and half-heights of each sprite
     character.halfWidth = character.width / 2;
@@ -229,43 +293,50 @@ function createGame() {
 
     //Check for a collision on the x axis
     if (Math.abs(vx) < combinedHalfWidths) {
-
       //A collision might be occurring. Check for a collision on the y axis
       if (Math.abs(vy) < combinedHalfHeights) {
-
         //There's definitely a collision happening
         hit = true;
       } else {
-
         //There's no collision on the y axis
         hit = false;
       }
     } else {
-
       //There's no collision on the x axis
       hit = false;
     }
-
     //`hit` will be either `true` or `false`
     return hit;
-  }
-
-  function endGame() {
-    app.stage.visible = false;
-    gameOverScene.visible = true;
   }
 }
 createGame();
 
+function endGame() {
+  setTimeout(() =>{
+    mainScene.visible = false;
+    gameOverScene.visible = true;
+
+    setTimeout(() => {
+      app.stop();
+    }, 500);
+    
+
+    restartBtn.on("mousedown", () => {
+        resetGame();
+    });
+    
+  }, 1000);
+
+}
+
 function resetGame() {
-  //COMMENT: when the game is goin to reset in console we took a many errors, we have to fix them
   setTimeout(() => {
-    document.body.removeChild(app.view);
     while(app.stage.children[0]) { 
       app.stage.removeChild(app.stage.children[0]); 
     }
+    document.body.removeChild(app.view);
     app.stage.destroy(true);
-    setTimeout(createGame, 4000);
+    setTimeout(createGame, 3000);
   }, 3000);
 }
 

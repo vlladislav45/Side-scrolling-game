@@ -1,8 +1,9 @@
 export default class Obstacle {
-    constructor(app, GAME_WIDTH, GAME_HEIGHT, animatedTexture) {
+    constructor(app, GAME_WIDTH, GAME_HEIGHT, animatedTexture, scene) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
+        this.scene = scene;
 
         this.position = {
             x: this.GAME_WIDTH,
@@ -16,7 +17,7 @@ export default class Obstacle {
         this.obstacleFrames.animationSpeed = 0.150; 
         this.obstacleFrames.play();
 
-        this.app.stage.addChild(this.obstacleFrames);      
+        scene.addChild(this.obstacleFrames);      
 
         this.xSpeed = Math.floor((Math.random() * 10) + 1);
     }

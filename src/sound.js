@@ -1,8 +1,9 @@
 export default class Sound {
-    constructor(app, src, GAME_WIDTH, GAME_HEIGHT, unmutedTexture, mutedTexture) {
+    constructor(app, src, GAME_WIDTH, GAME_HEIGHT, unmutedTexture, mutedTexture, scene) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
+        this.scene = scene;
 
         this.unmutedTexture = unmutedTexture;
         this.mutedTexture = mutedTexture;
@@ -23,12 +24,12 @@ export default class Sound {
       this.btn.on('click', () => {
         if(!this.isMuted) {
           this.play();
-          this.app.stage.removeChild(this.btn);
+          this.scene.removeChild(this.btn);
           this.addTexture(this.unmutedTexture);
           this.isMuted = true;
         }else {
           this.stop();
-          this.app.stage.removeChild(this.btn);
+          this.scene.removeChild(this.btn);
           this.addTexture(this.mutedTexture);
           this.isMuted = false;
         }
@@ -41,7 +42,7 @@ export default class Sound {
       this.btn.position.set(this.GAME_WIDTH / 100, this.GAME_HEIGHT / 8);
       this.btn.width = 50;
       this.btn.height = 50;
-      this.app.stage.addChild(this.btn);
+      this.scene.addChild(this.btn);
     }
 
     play(){

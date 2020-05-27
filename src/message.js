@@ -1,8 +1,9 @@
 export default class Message {
-    constructor(app, GAME_WIDTH, GAME_HEIGHT, scoreText, bombText) {
+    constructor(app, GAME_WIDTH, GAME_HEIGHT, scoreText, bombText, scene) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
+        this.scene = scene;
 
         this.style = new PIXI.TextStyle({
             fontFamily: "Arial",
@@ -23,8 +24,8 @@ export default class Message {
         this.scores.position.set(this.GAME_WIDTH / 100, this.GAME_HEIGHT / 100);
         this.bombs.position.set(this.GAME_WIDTH / 100, this.GAME_HEIGHT / 20);
 
-        this.app.stage.addChild(this.scores);
-        this.app.stage.addChild(this.bombs);
+        scene.addChild(this.scores);
+        scene.addChild(this.bombs);
     }
 
     updateScoreText(scoreText, bombText) {

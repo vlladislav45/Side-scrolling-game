@@ -1,9 +1,10 @@
 export default class Character {
-    constructor(GAME_WIDTH, GAME_HEIGHT,texture,pixi) {
-        this.app = pixi;
+    constructor(app,GAME_WIDTH, GAME_HEIGHT,texture, scene) {
+        this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
         this.texture = texture;
+        this.scene = scene;
 
         this.character = new PIXI.Sprite(this.texture);
 
@@ -34,11 +35,11 @@ export default class Character {
     }
 
     crash(animatedTexture) {
-        this.character = new PIXI.AnimatedSprite.fromFrames(animatedTexture);
+       this.character = new PIXI.AnimatedSprite.fromFrames(animatedTexture);
        this.character.animationSpeed = 0.150; 
-        this.character.play();
+       this.character.play();
         
-        this.stop();
+       this.stop();
     }
 
     score(enemy) {
@@ -52,7 +53,7 @@ export default class Character {
         this.character.position.set(this.position.x,this.position.y);
         this.character.width = this.width;
         this.character.height = this.height;
-        this.app.stage.addChild(this.character);
+        this.scene.addChild(this.character);
     }
 
     update() {
