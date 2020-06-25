@@ -36,6 +36,8 @@ export default class Pause {
         this.btn.position.set(this.GAME_WIDTH / 20, this.GAME_HEIGHT / 8);
         this.btn.width = 50;
         this.btn.height = 50;
+        this.btn.interactive = true;
+        this.btn.buttonMode = true;
         this.scene.addChild(this.btn);
       }
 }

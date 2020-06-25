@@ -1,3 +1,5 @@
+import { speed } from "./utils/speed";
+
 export default class Enemy {
     constructor(app,GAME_WIDTH, GAME_HEIGHT,animatedTexture, bulletTexture, character, scene) {
         this.app = app;
@@ -12,6 +14,9 @@ export default class Enemy {
             y: this.GAME_HEIGHT - 100
         }
 
+        this.maxSpeed = 6;
+        this.minSpeed = 3;
+
         this.enemy = new PIXI.AnimatedSprite.fromFrames(animatedTexture);
         this.enemy.position.set(this.position.x,this.position.y);
         this.enemy.width = 100;
@@ -20,7 +25,7 @@ export default class Enemy {
         this.enemy.play();
         scene.addChild(this.enemy);      
 
-        this.maxSpeed = this.randomSpeedVX();
+        this.maxSpeed = speed(this.minSpeed,this.maxSpeed);
 
         //Bullet
         this.bullet = new PIXI.Sprite(bulletTexture);
@@ -31,11 +36,6 @@ export default class Enemy {
         this.bulletSpeed = 7;
 
         this.missedBombs = 0;
-    }
-
-    randomSpeedVX() {
-        let randomSpeed = Math.floor((Math.random() * 4) + 1);
-        return randomSpeed;
     }
 
     shot() {
@@ -62,9 +62,16 @@ export default class Enemy {
             this.position.x = this.GAME_WIDTH - Math.floor((Math.random() * 10) + 1);
             this.position.y = this.GAME_HEIGHT - 100;
 
-            this.maxSpeed = this.randomSpeedVX();
+            this.maxSpeed = speed(this.minSpeed,this.maxSpeed);
         }
 
         this.shot();
+    }
+
+    respawn() {
+        this.position.x = this.GAME_WIDTH - Math.floor((Math.random() * 10) + 1);
+        this.position.y = this.GAME_HEIGHT - 100;
+
+        this.maxSpeed = speed(this.minSpeed,this.maxSpeed);
     }
 }

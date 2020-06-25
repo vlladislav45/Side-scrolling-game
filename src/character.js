@@ -1,5 +1,5 @@
 export default class Character {
-    constructor(app,GAME_WIDTH, GAME_HEIGHT,texture, scene) {
+    constructor(app,GAME_WIDTH, GAME_HEIGHT,texture, scene, bulletTexture) {
         this.app = app;
         this.GAME_WIDTH = GAME_WIDTH;
         this.GAME_HEIGHT = GAME_HEIGHT;
@@ -20,6 +20,29 @@ export default class Character {
         this.ySpeed = 0;
 
         this.scores = 0;
+
+        this.bulletBody = new PIXI.Sprite(bulletTexture);
+        this.bulletBody.width = 50;
+        this.bulletBody.height = 25;
+        this.bulletBody.position.set(this.position.x + 100, this.position.y + 100);
+        scene.addChild(this.bulletBody);
+        this.bulletSpeed = 15;
+    }
+
+    shot() {
+        this.bulletBody.rotation = 3.1;
+        this.bulletBody.x += this.bulletSpeed;
+        
+
+        if(this.bulletBody.x + this.bulletBody.width >= this.GAME_WIDTH) {
+            this.bulletBody.x = this.character.x + 100;
+            this.bulletBody.y = this.character.y + 100;
+        }
+    }
+
+    stopShot() {
+        this.bulletBody.x = this.character.x + 100;
+        this.bulletBody.y = this.character.y + 100;
     }
 
     moveTop() {
@@ -57,6 +80,8 @@ export default class Character {
     }
 
     update() {
+        this.shot();
+
         this.position.y += this.ySpeed;
 
         if (this.position.y <= 0) this.position.y = 0;
