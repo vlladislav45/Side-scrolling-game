@@ -124,7 +124,6 @@ function createGame() {
       mainScene.addChild(score.scoreText);
       let finalScores = new Score(app,GAME_WIDTH, GAME_HEIGHT);
       gameOver.add(finalScores.scoreText);
-
       let bomb = new Bomb(app,GAME_WIDTH,GAME_HEIGHT, mainScene);
       const localSound = "./sounds/airplanes.wav";
       const sound = new Sound(app, localSound, GAME_WIDTH, GAME_HEIGHT, app.loader.resources["soundOn"].texture,
@@ -157,20 +156,18 @@ function createGame() {
         for(let i = 0; i < obstacles.length; i++) { // Obstacles
             obstacles[i].update();
             obstacles[i].draw();
-
-            if(character.score(obstacles[i])) {
-              scores++;
-              score.updateScoreText(scores,false); 
-              finalScores.updateScoreText(scores,false);
-            }
             
             if(collision(character.character,obstacles[i].obstacleFrames)) {
               character.crash(crashPlane);
               obstacles[i].stop(true);
-              score.updateScoreText(scores,true); 
-              finalScores.updateScoreText(scores,true);
 
               endGame();
+            }else {
+              if(character.score(obstacles[i])) {
+                scores += 57;
+                score.update(scores); 
+                finalScores.update(scores);
+              }
             }
 
             if(collision(character.bulletBody,obstacles[i].obstacleFrames)) {

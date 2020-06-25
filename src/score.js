@@ -16,12 +16,10 @@ export default class Score {
           
         this.scoreText = new PIXI.Text("Scores: " + 0, this.style);
         this.scoreText.position.set(this.GAME_WIDTH / 100, this.GAME_HEIGHT / 100);
-        //scene.addChild(this.scoreText);
     }
 
-    updateScoreText(scoreText, isStopped) {
-        if(isStopped === false) this.scoreText.text = "Scores: " + scoreText;
-        else return this.scoreText.text;
+    update(scoreText) {
+        this.scoreText.text = "Scores: " + scoreText;
     }
 
 }

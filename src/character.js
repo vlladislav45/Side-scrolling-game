@@ -24,7 +24,7 @@ export default class Character {
         this.bulletBody = new PIXI.Sprite(bulletTexture);
         this.bulletBody.width = 50;
         this.bulletBody.height = 25;
-        this.bulletBody.position.set(this.position.x + 100, this.position.y + 100);
+        this.bulletBody.position.set(this.position.x + 100, this.position.y + 80);
         scene.addChild(this.bulletBody);
         this.bulletSpeed = 15;
     }
@@ -36,7 +36,7 @@ export default class Character {
 
         if(this.bulletBody.x + this.bulletBody.width >= this.GAME_WIDTH) {
             this.bulletBody.x = this.character.x + 100;
-            this.bulletBody.y = this.character.y + 100;
+            this.bulletBody.y = this.character.y + 80;
         }
     }
 
@@ -66,7 +66,7 @@ export default class Character {
     }
 
     score(enemy) {
-        if(this.position.x >= enemy.position.x) {
+        if(enemy.position.x <= 5) {
             return true;
         }
         return false;
