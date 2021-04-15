@@ -30,61 +30,61 @@ function createGame() {
     app.renderer.view.style.border = "8px solid black";
 
   const obstacleFrames = [ 
-    "../sprites/obstacles/coin-0.png",
-    "../sprites/obstacles/coin-1.png",
-    "../sprites/obstacles/coin-2.png",
-    "../sprites/obstacles/coin-3.png",
-    "../sprites/obstacles/coin-4.png",
-    "../sprites/obstacles/coin-5.png",
-    "../sprites/obstacles/coin-6.png",
-    "../sprites/obstacles/coin-7.png",
-    "../sprites/obstacles/coin-8.png",
-    "../sprites/obstacles/coin-9.png",
-    "../sprites/obstacles/coin-10.png",
-    "../sprites/obstacles/coin-11.png",
-    "../sprites/obstacles/coin-12.png",
-    "../sprites/obstacles/coin-13.png",
-    "../sprites/obstacles/coin-14.png"
+    "../assets/images/sprites/obstacles/coin-0.png",
+    "../assets/images/sprites/obstacles/coin-1.png",
+    "../assets/images/sprites/obstacles/coin-2.png",
+    "../assets/images/sprites/obstacles/coin-3.png",
+    "../assets/images/sprites/obstacles/coin-4.png",
+    "../assets/images/sprites/obstacles/coin-5.png",
+    "../assets/images/sprites/obstacles/coin-6.png",
+    "../assets/images/sprites/obstacles/coin-7.png",
+    "../assets/images/sprites/obstacles/coin-8.png",
+    "../assets/images/sprites/obstacles/coin-9.png",
+    "../assets/images/sprites/obstacles/coin-10.png",
+    "../assets/images/sprites/obstacles/coin-11.png",
+    "../assets/images/sprites/obstacles/coin-12.png",
+    "../assets/images/sprites/obstacles/coin-13.png",
+    "../assets/images/sprites/obstacles/coin-14.png"
   ];
 
   const crashPlane = [
-    "../sprites/crash_plane/explosion-01.png",
-    "../sprites/crash_plane/explosion-02.png",
-    "../sprites/crash_plane/explosion-03.png",
-    "../sprites/crash_plane/explosion-04.png",
-    "../sprites/crash_plane/explosion-05.png",
-    "../sprites/crash_plane/explosion-06.png",
-    "../sprites/crash_plane/explosion-07.png",
-    "../sprites/crash_plane/explosion-08.png",
-    "../sprites/crash_plane/explosion-09.png"
+    "../assets/images/sprites/crash_plane/explosion-01.png",
+    "../assets/images/sprites/crash_plane/explosion-02.png",
+    "../assets/images/sprites/crash_plane/explosion-03.png",
+    "../assets/images/sprites/crash_plane/explosion-04.png",
+    "../assets/images/sprites/crash_plane/explosion-05.png",
+    "../assets/images/sprites/crash_plane/explosion-06.png",
+    "../assets/images/sprites/crash_plane/explosion-07.png",
+    "../assets/images/sprites/crash_plane/explosion-08.png",
+    "../assets/images/sprites/crash_plane/explosion-09.png"
   ];
 
   const tank = [
-    "../sprites/tank/left-1.png",
-    "../sprites/tank/left-2.png",
-    "../sprites/tank/left-3.png",
-    "../sprites/tank/left-4.png",
+    "../assets/images/sprites/tank/left-1.png",
+    "../assets/images/sprites/tank/left-2.png",
+    "../assets/images/sprites/tank/left-3.png",
+    "../assets/images/sprites/tank/left-4.png",
   ];
 
   app.loader.baseUrl = "assets";
   app.loader
-    .add("bgBack", "mountains/bgBack_mountain.png")
-    .add("bgMiddle", "mountains/bgMid_mountain.png")
-    .add("bgFront", "mountains/bgFront_mountain.png")
-    .add("bgClouds", "mid_ground_cloud_1.png")
-    .add("bgMidClouds", "mid_ground_cloud_2.png")
-    .add("bgSky", "sky_color.png")
-    .add("bgSkyTop", "sky_color_top.png")
-    .add("bgSun", "sun.png")
-    .add("character", "../sprites/plane.png")
+    .add("bgBack", "../assets/images/parallax/mountains/bgBack_mountain.png")
+    .add("bgMiddle", "../assets/images/parallax/mountains/bgMid_mountain.png")
+    .add("bgFront", "../assets/images/parallax/mountains/bgFront_mountain.png")
+    .add("bgClouds", "../assets/images/parallax/mid_ground_cloud_1.png")
+    .add("bgMidClouds", "../assets/images/parallax/mid_ground_cloud_2.png")
+    .add("bgSky", "../assets/images/parallax/sky_color.png")
+    .add("bgSkyTop", "../assets/images/parallax/sky_color_top.png")
+    .add("bgSun", "../assets/images/parallax/sun.png")
+    .add("character", "../assets/images/sprites/plane.png")
     .add(obstacleFrames)
     .add(crashPlane)
-    .add("soundOn", "../images/icons8-sound-100.png")
-    .add("soundOff", "../images/icons8-sound-speaker-100.png")
+    .add("soundOn", "../assets/images/icons/icons8-sound-100.png")
+    .add("soundOff", "../assets/images/icons/icons8-sound-speaker-100.png")
     .add(tank)
-    .add("bullet", "../sprites/bullet/1.png")
-    .add("pause", "../images/icons8-pause-100.png")
-    .add("restartBtn", "../images/restart-btn.png")
+    .add("bullet", "../assets/images/sprites/bullet/1.png")
+    .add("pause", "../assets/images/icons/icons8-pause-100.png")
+    .add("restartBtn", "../assets/images/icons/restart-btn.png")
     .load(setup);
 
     let bgBack, bgMiddle, bgFront, bgClouds, bgMidClouds, bgSky, bgSkyTop, bgSun;
@@ -125,7 +125,7 @@ function createGame() {
       let finalScores = new Score(app,GAME_WIDTH, GAME_HEIGHT);
       gameOver.add(finalScores.scoreText);
       let bomb = new Bomb(app,GAME_WIDTH,GAME_HEIGHT, mainScene);
-      const localSound = "./sounds/airplanes.wav";
+      const localSound = "../assets/sounds/airplanes.wav";
       const sound = new Sound(app, localSound, GAME_WIDTH, GAME_HEIGHT, app.loader.resources["soundOn"].texture,
       app.loader.resources["soundOff"].texture, mainScene);
       const pause = new Pause(app, app.loader.resources["pause"].texture,GAME_WIDTH, GAME_HEIGHT, mainScene);      
