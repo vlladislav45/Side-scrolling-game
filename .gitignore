@@ -2,6 +2,7 @@
 ## IntelliJ
 ##########################
 *.iml
+*idea/
 .idea/
 *.ipr
 *.iws
@@ -49,3 +50,8 @@ nb-configuration.xml
 
 # Local History for Visual Studio Code
 .history/
+
+# Node modules
+*node_modules/
+.node_modules/
+node_modules
