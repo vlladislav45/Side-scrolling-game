@@ -28,3 +28,11 @@ With that said, let's run npx webpack, which will take our script at src/index.j
 * CSS3
 * JavaScript Ecmascript 6
 * Webpack
+
+## Overview
+
+![Screenshot from 2021-04-15 11-05-59](https://user-images.githubusercontent.com/16848880/114835784-f0307300-9d9f-11eb-9587-2940d96763d1.png)
+
+![Screenshot from 2021-04-15 11-06-08](https://user-images.githubusercontent.com/16848880/114835810-f7578100-9d9f-11eb-9da3-8446dc680275.png)
+
+
